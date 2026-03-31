@@ -5,12 +5,10 @@ const messageSchema = new mongoose.Schema(
     senderid: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
     },
     receiverid: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
     },
     text: {
       type: String,
@@ -18,7 +16,6 @@ const messageSchema = new mongoose.Schema(
     mediaType: {
       type: String,
       enum: ["image", "video"],
-      default: null,
     },
     mediaurl: {
       type: String,
