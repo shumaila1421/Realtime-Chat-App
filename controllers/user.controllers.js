@@ -51,5 +51,53 @@ export const registerUser = async (req, res) => {
       message: "User register successfully!",
       user: rest,
     });
-  } catch (error) {}
+  } catch (error) {
+    res.json({
+      success: false,
+      message: "Error with registration!",
+      error,
+    });
+  }
+};
+
+export const loginUser = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email) {
+      return res.status(422).json({ message: "Email is required!" });
+    }
+    if (!password) {
+      return res.status(422).json({ message: "Password is required!" });
+    }
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res
+        .status(400)
+        .json({ success: false, message: "User does not exists!" });
+    }
+
+    const isMatchPassword = bcrypt.compareSync(password, user.password);
+
+    if (!isMatchPassword) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid Credentials!" });
+    }
+
+    generateToken(res, user);
+    const { password: pass, ...rest } = user._doc;
+    res.json({
+      success: true,
+      message: "User login successfully!",
+      user: rest,
+    });
+  } catch (error) {
+    res.json({
+      success: false,
+      message: "Error with login!!",
+      error,
+    });
+  }
 };
